@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+    {% block head %}
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title> {% block title %} {{ title if title else appName }} {% endblock title %} </title>
+    <link rel="shortcut icon" href="{{ url_for('static', path='images/favicon.ico') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static', path='css/libs.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', path='css/coinex.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', path='css/style.css') }}">
+    {% endblock head %}
+</head>
+<body>
+
+<div id="header">
+    {% block header %}
+        {% include "_partials/_header.html" %}
+    {% endblock header%}
+</div>
+
+<div id="content">{% block content %}{% endblock %}</div>
+
+<div id="footer">
+    {% block footer %}
+        {% include "_partials/_footer.html" %}
+    {% endblock %}
+</div>
+
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <title>{{ appName }} | Binance FastAPI</title>
+      {{ _partials/head }}
+      {{block "head"}}
+        {{!-- External page head section--}}
+      {{endblock}}
+  </head>
+  <body class=" {{bodyClass}}">
+    <!-- loader Start -->
+    <div id="loading">
+      {{> partials/dashboard/loader }}
+    </div>
+    <!-- loader END -->
+    {{> partials/dashboard/sidebar }}
+    <main class="main-content">
+      <div class="position-relative">
+        <!--Nav Start-->
+        {{> partials/dashboard/header }}
+        <!--Nav End-->
+      </div>
+      <div class="container-fluid content-inner pb-0">
+        {{#block "content"}}
+        {{/block}}
+      </div>
+      {{> partials/dashboard/footer }}
+    </main>
+
+    <!-- Wrapper End-->
+    <!-- offcanvas start -->
+
+    {{> partials/dashboard/scripts }}
+    {{#block "scripts"}}
+    {{/block}}
+  </body>
+</html>
