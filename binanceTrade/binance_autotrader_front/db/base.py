@@ -7,8 +7,8 @@ from sqlalchemy.ext.declarative import as_declarative
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy import exc
 
-# import dotenv
-# dotenv.load_dotenv('/home/jb/PyProjects/binanceTradeFAPI/binanceTrade/.env')
+import dotenv
+dotenv.load_dotenv('/home/jb/PyProjects/binanceTradeFAPI/binanceTrade/.env')
 
 
 def get_engine(echo: bool = False):
@@ -20,12 +20,12 @@ def get_engine(echo: bool = False):
 
     from sqlalchemy.ext.asyncio import create_async_engine
 
-    db_url = f"postgresql+asyncpg://{user}:{password}@{host}:{port}/{database}"
-    # db_url = f"postgresql+psycopg2://{user}:{password}@{host}:{port}/{database}"
+    # db_url = f"postgresql+asyncpg://{user}:{password}@{host}:{port}/{database}"
+    db_url = f"postgresql+psycopg2://{user}:{password}@{host}:{port}/{database}"
 
     try:
-        engine = create_async_engine(db_url, echo=echo, future=False)
-        # engine = create_engine(db_url, echo=echo, future=False)
+        # engine = create_async_engine(db_url, echo=echo, future=False)
+        engine = create_engine(db_url, echo=echo, future=False)
         # engine = create_engine(db_url, connect_args={'check_same_thread': False}, echo=echo, future=False)
         # print(engine)
     except exc.DBAPIError as e:
@@ -122,8 +122,4 @@ def session(**kwargs) -> typing.ContextManager[Session]:
 
 
 if __name__ == '__main__':
-    with engine.connect() as connect:
-        for row in connect.execute(f'select * from public.klines_btcusdt_1h where id < %s', 100):
-            print(dict(row))
-
-    print(engine)
+    pass

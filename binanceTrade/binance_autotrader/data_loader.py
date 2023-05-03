@@ -46,8 +46,11 @@ class BinanceDataLoader:
             symbol: str = "BTCUSDT",
             interval: Literal[enums.INTERVALS] = '1m',
             limit: int = 10,
+            start: int = None,
+            end: int = None
     ) -> pd.DataFrame:
         """ Загрузка исторических данных с сервера Binance
+
             :param str symbol: Binance trading symbol e.g. "BTCUSDT"
             :param interval: name time interval
             :type interval: str in enums.INTERVALS
@@ -112,6 +115,63 @@ class BinanceDataLoader:
 
     def _time_now(self):
         return int(time.time()) * 1000
+
+
+oldest_time = calendar.timegm((2020, 1, 1, 0, 0, 0)) * 1000
+
+
+def time_now_ms(self):
+    return int(time.time()) * 1000
+
+
+def load_historical_data(
+        symbol: str = "BTCUSDT",
+        interval: Literal[enums.INTERVALS] = '1m',
+        limit: int = 10,
+        start: int = None,
+        end: int = None
+) -> pd.DataFrame:
+    """ Загрузка исторических данных с сервера Binance
+
+        :param str symbol: Binance trading symbol e.g. "BTCUSDT"
+        :param interval: name time interval
+        :type interval: str in enums.INTERVALS
+        :param int limit: any int __ge__ 0
+        :return: pandas.DataFrame with historical data by symbol_period
+    """
+
+    client = Client(test_mode=False)
+    klines = []
+    start_time = None
+    interval_time = enums.INTERVALS_TIME.get(interval)
+    _limit = limit
+
+    if limit > 1000:
+        start_time = time_now_ms() - limit * interval_time
+        if start_time < oldest_time:
+            start_time = oldest_time
+            limit = int((time_now_ms() - start_time) / interval_time)
+
+        _limit = 1000
+
+    # Load data in chunks of 1000 bars
+    while limit > 0:
+        bars = client.klines(
+            symbol=symbol, interval=interval, startTime=start_time, limit=_limit
+        )
+        klines += bars
+
+        # Set start_time to the next timestamp after the last bar in the previous chunk
+        start_time = int(bars[-1][0] + interval_time)
+        limit -= 1000
+
+    # Convert data to pandas DataFrame
+    df = pd.DataFrame(klines, columns=enums.COLUMNS)
+    df = df_normalize(df)
+    # df["time_open"] = pd.to_datetime(df["time_open"], unit="ms")
+    # df.set_index("time_open", inplace=True)
+
+    return df
 
 
 if __name__ == '__main__':

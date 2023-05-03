@@ -1,10 +1,11 @@
 import sys
+import calendar
 from typing import Literal
 
 import pandas as pd
 import numpy as np
 
-from . import enums
+from binance_autotrader import enums
 
 
 def history_dir() -> str:
@@ -255,6 +256,10 @@ def get_coins_from_cross(cross: str):
     return base_coin, quote_coin
 
 
+def datetime_to_ms(structure: tuple) -> int:
+    return calendar.timegm(structure) * 1000
+
+
 def write_crossdf_to_csv_zip(df: pd.DataFrame, symbol1: str = None, symbol2: str = None, interval: str = None):
     """
 
@@ -291,3 +296,8 @@ def write_crossdf_to_csv_zip(df: pd.DataFrame, symbol1: str = None, symbol2: str
     df.to_csv(path_cross, header=False, index=False, compression=compression_opts)
 
     print(f'Write file {path_cross}')
+
+
+if __name__ == '__main__':
+    tm = datetime_to_ms((2020, 1, 1, 0, 0, 0))
+    print(tm)

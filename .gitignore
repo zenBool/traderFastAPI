@@ -6,7 +6,9 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+tests/
 user.cfg
+plan.txt
 
 # examples using libbrary
 examples/
@@ -162,3 +164,4 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+!/plan.txt

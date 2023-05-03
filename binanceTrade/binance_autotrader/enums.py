@@ -1,15 +1,12 @@
-from dataclasses import dataclass
 from datetime import *
 from enum import Enum
-from typing import List, Any
+from typing import Literal, List, Any
 
-from pydantic import BaseModel, validator, root_validator
-
-
-# class IntervalNameEnum():
+from pydantic import BaseModel
 
 
-INTERVALS: list[str] = ["1m", "3m", "5m", "15m", "30m", "1h", "2h", "4h", "6h", "8h", "12h", "1d", "3d", "1w", "1mo"]
+INTERVALS: List[str] = ["1s", "1m", "3m", "5m", "15m", "30m", "1h", "2h", "4h", "6h", "8h", "12h", "1d", "3d", "1w", "1mo"]
+INTERVALS_LITERAL = Literal["1s", "1m", "3m", "5m", "15m", "30m", "1h", "2h", "4h", "6h", "8h", "12h", "1d", "3d", "1w", "1mo"]
 
 
 class IntervalNameEnum(str, Enum):
@@ -48,7 +45,16 @@ class IntervalValueEnum(int, Enum):
     WEEK1 = 1000 * 60 * 60 * 24 * 7
 
 
-TRADING_TYPE = ["spot", "um", "cm"]
+class Interval(BaseModel):
+    name: Literal[INTERVALS_LITERAL]
+    ms: IntervalValueEnum = None
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(**kwargs)
+        self.ms = getattr(IntervalValueEnum, IntervalNameEnum(self.name).name).value
+
+
+TRADING_TYPE = Literal["spot", "um", "cm"]
 MONTHS = list(range(1, 13))
 INTERVALS_TIME = {
     "1m": 1000 * 60,
@@ -133,12 +139,7 @@ if __name__ == '__main__':
 
     # =================================================
 
-    data = """{
-        "interval": "MIN1"
-    }"""
     interval = Interval(name='15m')
-        # .parse_raw(data)
-    # interval.value = 120000
     print(interval.name)
     print(interval.ms)
 

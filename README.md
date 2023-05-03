@@ -1,6 +1,6 @@
 ## binanceTrade
 
-Project designed to improve skills.
+Draft project designed to improve skills and testing ideas.
 Views, analitycs and trading on Binance Ex Data.
 Languages, frameworks and technologies uses in the project:
 
