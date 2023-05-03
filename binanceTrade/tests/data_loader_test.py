@@ -1,11 +1,9 @@
-import calendar
 import sys
 import time
-from datetime import datetime
+import calendar
 
 from loguru import logger
 import pandas as pd
-from pandas import DataFrame
 from pydantic.typing import Literal
 
 from binance_autotrader import Client, ClientWS, enums
@@ -21,7 +19,14 @@ class BinanceDataLoader:
         Для Получения данных без потока их обновления :param real_time: установить в False
 
     """
-    def __init__(self, symbol: str = "BTCUSDT", interval: str = '1m', limit: int = 200, real_time: bool = True):
+    def __init__(
+            self,
+            symbol: str = "BTCUSDT",
+            interval: str = '1m',
+            limit: int = 1000,
+            start_time: int = None,
+            real_time: bool = True
+    ):
         """
 
         :param str symbol: Binance trading symbol, e.g. "BTCUSDT"
@@ -39,6 +44,7 @@ class BinanceDataLoader:
         self.client = Client(test_mode=False)
         self.client_ws = ClientWS(test_mode=False)
         self.limit = limit
+        self.start_time = start_time
         self._rt = real_time
         self._manager()
 
@@ -82,6 +88,10 @@ class BinanceDataLoader:
 
             _limit = 1000
 
+        # используется для загрузки данных с определенного времени (до 1000 баров)
+        if self.start_time:
+            start_time = self.start_time
+
         # Load data in chunks of 1000 bars
         while tmp_limit > 0:
             bars = self.client.klines(
@@ -97,13 +107,14 @@ class BinanceDataLoader:
         df = pd.DataFrame(klines, columns=enums.COLUMNS)
         df = df_normalize(df)
         # df["time_open"] = pd.to_datetime(df["time_open"], unit="ms")
-        df.set_index("time_open", inplace=True)
+        # df.set_index("time_open", inplace=True)
 
         return df
 
     def _manager(self):
         global df_global
         df_global[self.symbol] = self.load_historical_data()
+        self.df = self.load_historical_data()
         if self._rt:
             self.stream_data()
 
@@ -130,7 +141,7 @@ class BinanceDataLoader:
             _gli = _tmp_df_global.index.to_list()
             if _dfi not in _gli:
                 # новая свеча, присоединяем ее
-                logger.info('>>> add')
+                logger.info('+++ add')
                 _tmp_df_global = pd.concat([_tmp_df_global, _df], join='outer')
                 df_global[self.symbol] = _tmp_df_global
             else:
@@ -177,12 +188,20 @@ class BinanceDataLoader:
 
         return df
 
+    def _ma_calculate(self):
+        pass
+
     def _time_now(self):
         return int(time.time()) * 1000
 
 
 if __name__ == '__main__':
-    loader = BinanceDataLoader()
+    # loader = BinanceDataLoader(interval='15m', limit=3, real_time=False)
+    #
+    # df = df_global['BTCUSDT'].to_dict()
+    # # pd.DataFrame.to
+    # print(df)
+
     # df = loader.load_historical_data()
     # print(df.dtypes)
     # print(df.head())
@@ -194,3 +213,43 @@ if __name__ == '__main__':
     # print(Client.KLINE_INTERVAL_1HOUR)
     # for param in client.__dir__():
     #     print(param)
+
+    periods = [5, 13, 34]
+    df = pd.DataFrame({'open': {1679320800000: 27821.17, 1679321700000: 27936.88, 1679322600000: 27990.92},
+                       'close': {1679320800000: 27936.88, 1679321700000: 27992.55, 1679322600000: 27950.27},
+                       'ignore': {1679320800000: 0, 1679321700000: 0, 1679322600000: 0},
+                       'ema_5': {1679320800000: 27924.17, 1679321700000: 27986.88, 1679322600000: 27991.92},
+                       'ema_13': {1679320800000: 27913.17, 1679321700000: 27946.88, 1679322600000: 27980.92},
+                       'ema_34': {1679320800000: 27898.17, 1679321700000: 27938.08, 1679322600000: 27971.12}})
+
+    new_df = pd.DataFrame({'open': {1679323500000: 27821.17, 1679324400000: 27936.88, 1679325300000: 27990.92},
+                           'close': {1679323500000: 27936.88, 1679324400000: 27992.55, 1679325300000: 27950.27},
+                           'ignore': {1679323500000: 0, 1679324400000: 0, 1679325300000: 0}})
+
+    # print(new_df.index[0])
+    print(df.iloc[0]['close'])
+    print(df.loc[df.index[0], 'close'])
+    # EMA = close(t)×k + EMA(y)×(1−k)
+    #
+    # where:
+    # close(t) = цена закрытия текущего бара
+    # EMA(y) = значение EMA предыдущего бара
+    # k = 2÷(N + 1)
+
+    # N = значение периода EMA, одно из значений 'periods'
+
+    # df = pd.concat([df, new_df])
+    #
+    # for period in periods:
+    #     k = 2 / (period + 1)
+    #     previous_ema = df[f'ema_{period}'][df.index[-1]]
+    #     for i, row in new_df.iterrows():
+    #         close = row['close']
+    #         new_ema = close * k + previous_ema * (1 - k)
+    #         new_df.loc[i, f'ema_{period}'] = new_ema
+    #         previous_ema = new_ema
+    #     df = pd.concat([df, new_df])
+    #
+    # print(df.tail())
+
+
