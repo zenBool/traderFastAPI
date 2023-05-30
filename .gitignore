@@ -11,18 +11,10 @@ user.cfg
 plan.txt
 
 # examples using libbrary
-examples/
 binance_example/
 
 # COINEX front-end
-binanceTrade/binance_autotrader_front/assets/
-
-# exclude gulp and src
-gulp.config.json
-gulp/
-gulpfile.js
-package.json
-frontend_dev/
+binanceTrade/autotrader_front/assets/
 
 # IDE's JetBrains
 .idea/

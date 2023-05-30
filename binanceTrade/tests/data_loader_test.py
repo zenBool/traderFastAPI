@@ -196,24 +196,6 @@ class BinanceDataLoader:
 
 
 if __name__ == '__main__':
-    # loader = BinanceDataLoader(interval='15m', limit=3, real_time=False)
-    #
-    # df = df_global['BTCUSDT'].to_dict()
-    # # pd.DataFrame.to
-    # print(df)
-
-    # df = loader.load_historical_data()
-    # print(df.dtypes)
-    # print(df.head())
-    #
-    # print(datetime.utcfromtimestamp(time.time_ns() / 1000000000))
-    # print(datetime.utcfromtimestamp(int(time.time_ns() / 1000000000)))
-
-    # client = Client(test_mode=False)
-    # print(Client.KLINE_INTERVAL_1HOUR)
-    # for param in client.__dir__():
-    #     print(param)
-
     periods = [5, 13, 34]
     df = pd.DataFrame({'open': {1679320800000: 27821.17, 1679321700000: 27936.88, 1679322600000: 27990.92},
                        'close': {1679320800000: 27936.88, 1679321700000: 27992.55, 1679322600000: 27950.27},
@@ -226,30 +208,5 @@ if __name__ == '__main__':
                            'close': {1679323500000: 27936.88, 1679324400000: 27992.55, 1679325300000: 27950.27},
                            'ignore': {1679323500000: 0, 1679324400000: 0, 1679325300000: 0}})
 
-    # print(new_df.index[0])
     print(df.iloc[0]['close'])
     print(df.loc[df.index[0], 'close'])
-    # EMA = close(t)×k + EMA(y)×(1−k)
-    #
-    # where:
-    # close(t) = цена закрытия текущего бара
-    # EMA(y) = значение EMA предыдущего бара
-    # k = 2÷(N + 1)
-
-    # N = значение периода EMA, одно из значений 'periods'
-
-    # df = pd.concat([df, new_df])
-    #
-    # for period in periods:
-    #     k = 2 / (period + 1)
-    #     previous_ema = df[f'ema_{period}'][df.index[-1]]
-    #     for i, row in new_df.iterrows():
-    #         close = row['close']
-    #         new_ema = close * k + previous_ema * (1 - k)
-    #         new_df.loc[i, f'ema_{period}'] = new_ema
-    #         previous_ema = new_ema
-    #     df = pd.concat([df, new_df])
-    #
-    # print(df.tail())
-
-
