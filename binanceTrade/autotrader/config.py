@@ -13,7 +13,7 @@ class Config:  # pylint: disable=too-few-public-methods,too-many-instance-attrib
         # Init config
         config = configparser.ConfigParser()
         config["DEFAULT"] = {
-            "bridge": "USDT",
+            "main_coin": "USDT",
             "use_margin": "no",
             "scout_multiplier": "5",
             "scout_margin": "0.8",
@@ -30,14 +30,6 @@ class Config:  # pylint: disable=too-few-public-methods,too-many-instance-attrib
             config[USER_CFG_SECTION] = {}
         else:
             config.read(CFG_FL_NAME)
-
-        self.BRIDGE_SYMBOL = os.environ.get("BRIDGE_SYMBOL") or config.get(USER_CFG_SECTION, "bridge")
-        self.BRIDGE = Coin(self.BRIDGE_SYMBOL, False)
-
-        # Prune settings
-        self.SCOUT_HISTORY_PRUNE_TIME = float(
-            os.environ.get("HOURS_TO_KEEP_SCOUTING_HISTORY") or config.get(USER_CFG_SECTION, "hourToKeepScoutHistory")
-        )
 
         # Get config for scout
         self.SCOUT_MULTIPLIER = float(

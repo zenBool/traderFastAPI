@@ -5,10 +5,10 @@ from typing import List, Any
 from loguru import logger
 from pydantic import BaseModel
 
-from binance_autotrader import Client, ClientWS, enums
-from binance_autotrader.data_store import data_store
+from autotrader import Client, ClientWS, enums
+from autotrader.data_store import data_store
 
-from binance_autotrader.func import get_klines_tablename
+from autotrader.func import get_klines_tablename
 
 from dotenv import load_dotenv
 

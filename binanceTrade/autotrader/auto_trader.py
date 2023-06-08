@@ -9,10 +9,10 @@ from sqlalchemy.orm import Session
 # from autotrader.clients import Client
 #
 # from autotrader.database import Database
-from autotrader.logger import Logger
+from .logger import Logger
 # from autotrader.models import Coin, CoinValue, Pair
 
-
+# Базовый класс автоторговли. На его основе реализуется Стратегия
 class AutoTrader:
     # def __init__(self, binance_manager: Client, database: Database, logger: Logger, config: Config):
     def __init__(self, logger: Logger):

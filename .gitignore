@@ -9,6 +9,7 @@ venv.bak/
 tests/
 user.cfg
 plan.txt
+requirements.txt
 
 # examples using libbrary
 binance_example/
