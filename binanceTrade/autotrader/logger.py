@@ -6,6 +6,8 @@ from loguru import logger
 class Logger(logger):
     pass
 
+    logger.add("logs/autotrader.log", level="DEBUG", format="{time} {level} {message}", rotation="10 MB")
+
     # Logger = None
     # NotificationHandler = None
 
