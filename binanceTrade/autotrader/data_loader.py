@@ -3,14 +3,13 @@ import sys
 import time
 from datetime import datetime
 
-from loguru import logger
-import pandas as pd
 from pydantic.typing import Literal
+import pandas as pd
 
-from binance_autotrader import Client, ClientWS, enums
-from binance_autotrader.func import df_normalize
-
-logger.add(sys.stderr, format="{time} {level} {message}", filter="tests", level="DEBUG")
+from .clients import Client, ClientWS
+from .func import df_normalize
+from . import enums
+from .logger import logger
 
 
 class BinanceDataLoader:

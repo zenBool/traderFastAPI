@@ -2,14 +2,14 @@ import sys
 import time
 import calendar
 
-from loguru import logger
 import pandas as pd
 from pydantic.typing import Literal
 
-from binance_autotrader import Client, ClientWS, enums
-from binance_autotrader.func import df_normalize
 
-logger.add(sys.stderr, format="{time} {level} {message}", filter="tests", level="DEBUG")
+from binanceTrade.autotrader.logger import logger
+from binanceTrade.autotrader.clients import Client, ClientWS
+import binanceTrade.autotrader.enums as enums
+from binanceTrade.autotrader.func import df_normalize
 
 df_global = {}
 

@@ -5,7 +5,7 @@ from typing import Literal
 import pandas as pd
 import numpy as np
 
-from binance_autotrader import enums
+from . import enums
 
 
 def history_dir() -> str:

@@ -3,12 +3,12 @@ import time
 
 from .config import Config
 from .database import Database
-from .logger import Logger
+from .logger import logger
 from .scheduler import SafeScheduler
 from .strategies import get_strategy
 
+
 def main():
-    logger = Logger()
     logger.info("Starting")
 
     config = Config()
