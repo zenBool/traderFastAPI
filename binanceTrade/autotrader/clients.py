@@ -2,6 +2,7 @@ import os
 
 from binance.spot import Spot
 from binance.websocket.spot.websocket_stream import SpotWebsocketStreamClient
+from binance.websocket.spot.websocket_api import SpotWebsocketAPIClient
 
 
 class Client(Spot):
@@ -58,14 +59,13 @@ class ClientWS(SpotWebsocketStreamClient):
 
 
 if __name__ == '__main__':
-    import logging
+    from binanceTrade.autotrader.logger import logger
     from binance.lib.utils import config_logging
 
     from dotenv import load_dotenv
 
-    config_logging(logging, logging.DEBUG)
     load_dotenv()
     # load_dotenv('/home/jb/PycharmProjects/binanceTradeDj/binanceTrade/.env')
 
     client = Client(test_mode=False)
-    logging.info(client.margin_all_pairs())
+    logger.info(client.margin_all_pairs())

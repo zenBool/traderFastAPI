@@ -1,0 +1,9 @@
+pydantic>=1.10.9
+pandas>=2.0.2
+loguru>=0.7.0
+python-dotenv>=1.0.0
+numpy>=1.25.0
+SQLAlchemy>=2.0.16
+schedule>=1.2.0
+fastapi>=0.97.0
+starlette>=0.28.0
