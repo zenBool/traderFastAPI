@@ -6,10 +6,10 @@ from datetime import datetime
 from pydantic.typing import Literal
 import pandas as pd
 
-from .clients import Client, ClientWS
-from .func import df_normalize
-from . import enums
-from .logger import logger
+from binanceTrade.autotrader.clients import Client, ClientWS
+from binanceTrade.autotrader.func import df_normalize
+from binanceTrade.autotrader import enums
+from binanceTrade.autotrader.logger import logger
 
 
 class BinanceDataLoader:
@@ -24,7 +24,7 @@ class BinanceDataLoader:
         self.client_ws = ClientWS(test_mode=False)
 
     def stream_data(self):
-        self.client_ws.start()
+        # self.client_ws.start()
         logger.info("open ws connection")
 
         try:
@@ -97,7 +97,7 @@ class BinanceDataLoader:
         symbol = data['s']
         global_df = df_wss[symbol]
 
-        _df = adapter(data)
+        _df = self._adapter(data)
 
         if global_df is not None:
             _dfi = data['t']
@@ -114,6 +114,37 @@ class BinanceDataLoader:
 
     def _time_now(self):
         return int(time.time()) * 1000
+
+    def _adapter(self, data: dict = None):
+        # Data example
+        sf = {'t': 1659798240000, 'T': 1659781079999, 's': 'BTCUSDT', 'i': '1m', 'f': 146705,
+              'L': 146757, 'o': '6.17000000', 'c': '23197.50000000', 'h': '23199.14000000',
+              'l': '23196.17000000', 'v': '2.45011400', 'n': 53, 'x': False, 'q': '56836.65111634',
+              'V': '1.10623200', 'Q': '25661.94302789', 'B': '0'}
+
+        if data is None:
+            return
+
+        dataframe_format = {
+            'time_open': data.get('t'),
+            'open': data.get('o'),
+            'high': data.get('h'),
+            'low': data.get('l'),
+            'close': data.get('c'),
+            'volume': data.get('v'),
+            'time_close': data.get('T'),
+            'q_asset_vol': data.get('q'),
+            'num_trades': data.get('n'),
+            'tb_base_av': data.get('V'),
+            'tb_quote_av': data.get('Q'),
+            'ignore': data.get('B')
+        }
+
+        df = pd.DataFrame(dataframe_format, index=[0])
+        df = df_normalize(df)
+        df.set_index('time_open', inplace=True)
+
+        return df
 
 
 oldest_time = calendar.timegm((2020, 1, 1, 0, 0, 0)) * 1000
@@ -183,6 +214,6 @@ if __name__ == '__main__':
     # print(datetime.utcfromtimestamp(int(time.time_ns() / 1000000000)))
 
     client = Client(test_mode=False)
-    print(Client.KLINE_INTERVAL_1HOUR)
+    print(client.KLINE_INTERVAL_1HOUR)
     # for param in client.__dir__():
     #     print(param)
